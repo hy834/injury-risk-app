@@ -1,0 +1,12 @@
+column,meaning,type / unit,range or values
+player_id,Coded player ID (no names),text,P0000 / T0000 / D000
+sport,Player's sport,category,"football, cricket, basketball, kabaddi"
+week,Week of the season,integer,1 to 52
+acwr,Acute:chronic workload ratio (last week's load / 4-week average),number,about 0.4 to 1.9; 1.0 = normal
+sleep_hours,Average nightly sleep last week,hours,about 3 to 10
+soreness,Self-reported muscle soreness,0 to 10,"0 = none, 10 = severe"
+hrv_ms,Morning heart-rate variability,milliseconds,about 25 to 110; lower = poorer recovery
+prior_injury,Injured in the last 12 months,0 / 1,1 = yes
+age,Player age,years,18 to 35
+high_risk,TARGET: injury within the next 4 weeks,0 / 1,1 = High risk
+case_type,Test 2 only: demo profile,category,"low, high, borderline, edge: ..."

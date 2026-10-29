@@ -1074,7 +1074,7 @@ elif selected_page == "📊 Model evaluation":
                 "AUC": st.column_config.TextColumn("AUC", width="small"),
             }
         )
-        st.markdown("<p style='font-size:0.84rem; color:var(--navy); font-weight:600; margin-top:8px;'>Baseline A is 77% accurate while catching zero injuries, so we judge models on recall and missed injuries, not accuracy.</p>", unsafe_allow_html=True)
+        st.markdown(f"<p style='font-size:0.84rem; color:var(--navy); font-weight:600; margin-top:8px;'>Baseline A is {float(df_perf_test1.iloc[0]['Accuracy']):.0%} accurate while catching zero injuries, so we judge models on recall and missed injuries, not accuracy alone.</p>", unsafe_allow_html=True)
         _no = df_perf_test1.iloc[2]; _sp = df_perf_test1.iloc[3]
         _caught = int(_no["Missed injuries"] - _sp["Missed injuries"]); _fa = int(_no["False alarms"] - _sp["False alarms"])
         _rule_caught = int(test1_df["high_risk"].sum() - df_perf_test1.iloc[1]["Missed injuries"])
@@ -1526,11 +1526,15 @@ elif selected_page == "ℹ️ About & risks":
 
     with st.container(border=True):
         st.markdown('<div class="vital-label" style="margin-bottom:6px;">Risks and what we do about them</div>', unsafe_allow_html=True)
+        _perf = evaluate_models(pipe_no, pipe_sp, test1_df, threshold=threshold).iloc[3]
+        _ab_miss, _ab_fa, _ab_pos = int(_perf["Missed injuries"]), int(_perf["False alarms"]), int(test1_df["high_risk"].sum())
+        _fs, _ = evaluate_fairness(pipe_sp, test1_df, threshold=threshold)
+        _ab_rec = ", ".join(f"{r['Sport'].lower()} {r['Recall']}" for _, r in _fs.iterrows())
         risk_rows = [
-            ["Missed injuries vs false alarms", "At cut-off 0.35 the model misses 51 of 115 at-risk players and raises 63 false alarms (test 1).", "Cut-off set by the medical team from the cost of each error; the clinician makes the final call."],
+            ["Missed injuries vs false alarms", f"At cut-off {threshold:.2f} the model misses {_ab_miss} of {_ab_pos} at-risk players and raises {_ab_fa} false alarms (test 1).", "Cut-off set by the medical team from the cost of each error; the clinician makes the final call."],
             ["Hallucination", "The LLM could invent a rule, a clause or medical advice.", "RAG on our protocol only; cited clause IDs are checked; out-of-scope questions must say 'not covered'; template fallback."],
             ["Prompt injection / misuse", "Staff notes could try to make the LLM clear a player.", "Injection filter, notes passed as data, output check blocks clearing wording, sign-off needs a named clinician."],
-            ["Bias", "Recall and false-alarm rates differ by sport and age (e.g. cricket recall 0.35, football 0.73).", "Fairness table on every run; per-sport cut-offs as future work; regular review by the medical team."],
+            ["Bias", f"Recall and false-alarm rates differ by sport and age (recall by sport: {_ab_rec}).", "Fairness table on every run; per-sport cut-offs as future work; regular review by the medical team."],
             ["Privacy", "Player health data is sensitive personal data.", "Coded IDs only, no names; nothing stored after the session; synthetic data on the public prototype."],
             ["Synthetic data", "The model learns our own formula, so results do not prove it predicts real injuries.", "Validate on anonymised real club data before any real use."],
             ["Over-reliance", "Staff may trust the score blindly.", "Score shown as 'model output for review'; every decision logged with the clinician's name [P9]."],
@@ -1563,5 +1567,5 @@ elif selected_page == "ℹ️ About & risks":
 
     with st.container(border=True):
         st.markdown('<div class="vital-label" style="margin-bottom:6px;">Data</div>', unsafe_allow_html=True)
-        st.markdown(f"Synthetic data only: **{len(train_df):,}** training player-weeks, **{len(test1_df)}** held-out test player-weeks and **{len(test2_df)}** curated demo cases, across football, cricket, basketball and kabaddi. The label (injury within 4 weeks) comes from a formula we wrote, with sport-specific effects.")
+        st.markdown(f"Synthetic data only: **{len(train_df):,}** training player-weeks, **{len(test1_df)}** held-out test player-weeks and **{len(test2_df)}** curated demo cases, across football, cricket, basketball and kabaddi. The label (injury within 4 weeks) comes from a formula we wrote, with sport-specific effects. In version 4 we reduced the randomness in how outcomes are drawn from that formula, so labels follow the risk factors more closely; this is a property of our synthetic data, not evidence about real injuries.")
         st.dataframe(dict_df, width="stretch", hide_index=True)

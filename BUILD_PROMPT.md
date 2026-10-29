@@ -48,12 +48,12 @@ You are building a Streamlit web app for a university Generative AI course proje
 
 | Model | Precision | Recall | F1 | False alarms | Missed injuries |
 |---|---|---|---|---|---|
-| Baseline A: predict all Low | 0.00 | 0.00 | 0.00 | 0 | 115 |
-| Baseline B: workload ratio > 1.3 | 0.36 | 0.17 | 0.23 | 36 | 95 |
-| Logistic regression, no sport | 0.46 | 0.50 | 0.48 | 67 | 58 |
-| Logistic regression, with sport | 0.50 | 0.56 | 0.53 | 63 | 51 |
+| Baseline A: predict all Low | 0.00 | 0.00 | 0.00 | 0 | 142 |
+| Baseline B: workload ratio > 1.3 | 0.66 | 0.26 | 0.37 | 19 | 105 |
+| Logistic regression, no sport | 0.67 | 0.75 | 0.70 | 53 | 36 |
+| Logistic regression, with sport | 0.80 | 0.89 | 0.84 | 32 | 16 |
 
-  AUC: 0.759 without sport, 0.796 with sport. If the numbers differ, the feature code is wrong; fix it before moving on.
+  AUC: 0.896 without sport, 0.958 with sport (version 4 data, reduced label noise). If the numbers differ, the feature code is wrong; fix it before moving on.
 
 ---
 

@@ -79,7 +79,11 @@ def inject_css():
         font-family: 'Material Symbols Rounded' !important;
     }
     .stApp{background:var(--bg);}
-    #MainMenu, footer, [data-testid="stToolbar"], .stDeployButton {display:none !important;}
+    #MainMenu, footer, .stDeployButton, [data-testid="stMainMenu"], [data-testid="stAppDeployButton"], [data-testid="stToolbarActions"] {display:none !important;}
+    /* keep the button that re-opens a collapsed sidebar visible */
+    [data-testid="stSidebarCollapsedControl"], [data-testid="stExpandSidebarButton"], [data-testid="collapsedControl"] {
+        display:flex !important; visibility:visible !important; opacity:1 !important; z-index:999990 !important;
+    }
     [data-testid="stHeader"]{background:transparent;}
     .block-container{padding-top:1rem; max-width:1180px;}
     h1{font-size:1.55rem !important; font-weight:700 !important; color:var(--navy);}
